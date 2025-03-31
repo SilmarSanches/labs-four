@@ -1,0 +1,23 @@
+basePath: /
+info:
+  contact: {}
+  description: Rate-Limiter
+  title: Rate-Limiter
+  version: "1.0"
+paths:
+  /hello:
+    get:
+      consumes:
+      - application/json
+      description: Endpoint que retorna uma mensagem de "Hello, World!"
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Endpoint simples que retorna uma string
+      tags:
+      - Labs-Four
+swagger: "2.0"

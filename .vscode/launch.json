@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd",
+            "env": {
+                "PORT": "8080",
+                "REDIS_ADDR":"localhost:6379",
+                "REDIS_PASSWORD": "",
+                "REDIS_DB":0,
+                "DEFAULT_LIMIT_PER_SECOND":5,
+                "DEFAULT_BLOCK_DURATION_SECONDS":60
+            },
+            "args": []
+        }
+    ]
+}

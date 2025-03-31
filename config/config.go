@@ -1,14 +1,21 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"time"
+
+	"github.com/spf13/viper"
+)
 
 type AppSettings struct {
-	Port                        string
-	RedisAddr                   string
-	RedisPassword               string
-	RedisDB                     string
-	DefaultLimitPerSecond       string
-	DefaultBlockDurationSeconds string
+	Port              string
+	RedisAddr         string
+	RedisPassword     string
+	RedisDB           string
+	RateLimitType     string
+	DefaultTokenLimit int
+	DefaultIPLimit    int
+	RateLimitDuration time.Duration
+	BlockDuration     time.Duration
 }
 
 func ProvideConfig() *AppSettings {
@@ -31,16 +38,16 @@ func LoadConfig() (*AppSettings, error) {
 		}
 	}
 
-	viper.SetDefault("PORT", "")
-	viper.SetDefault("API_KEY_TEMPO", "")
-
 	appConfig := &AppSettings{
-		Port:                        viper.GetString("PORT"),
-		RedisAddr:                   viper.GetString("REDIS_ADDR"),
-		RedisPassword:               viper.GetString("REDIS_PASSWORD"),
-		RedisDB:                     viper.GetString("REDIS_DB"),
-		DefaultLimitPerSecond:       viper.GetString("DEFAULT_LIMIT_PER_SECOND"),
-		DefaultBlockDurationSeconds: viper.GetString("DEFAULT_BLOCK_DURATION_SECONDS"),
+		Port:              viper.GetString("PORT"),
+		RedisAddr:         viper.GetString("REDIS_ADDR"),
+		RedisPassword:     viper.GetString("REDIS_PASSWORD"),
+		RedisDB:           viper.GetString("REDIS_DB"),
+		RateLimitType:     viper.GetString("RATE_LIMIT_TYPE"),
+		DefaultTokenLimit: viper.GetInt("DEFAULT_TOKEN_LIMIT"),
+		DefaultIPLimit:    viper.GetInt("DEFAULT_IP_LIMIT"),
+		RateLimitDuration: time.Duration(viper.GetInt("RATE_LIMIT_DURATION")) * time.Second,
+		BlockDuration:     time.Duration(viper.GetInt("BLOCK_DURATION")) * time.Second,
 	}
 
 	return appConfig, nil

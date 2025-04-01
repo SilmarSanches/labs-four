@@ -4,21 +4,23 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
+    container_name: redis
     restart: always
 
   app:
     build: .
     ports:
       - "8080:8080"
+    container_name: rate-limiter
     depends_on:
       - redis
     environment:
       - PORT=8080
-      - REDIS_ADDR=localhost:6379
+      - REDIS_ADDR=redis:6379
       - REDIS_PASSWORD=
       - REDIS_DB=0
-      - RATE_LIMIT_TYPE=memory  # redis ou memory
-      - DEFAULT_TOKEN_LIMIT=10
+      - RATE_LIMIT_TYPE=redis  # redis ou memory
+      - DEFAULT_TOKEN_LIMIT=5
       - DEFAULT_IP_LIMIT=5
       - RATE_LIMIT_DURATION=1
       - BLOCK_DURATION=10

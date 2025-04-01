@@ -2,6 +2,7 @@ package ratelimit
 
 import (
 	"context"
+	"fmt"
 	"labs-four/config"
 	"strconv"
 	"time"
@@ -41,13 +42,17 @@ func (r *RedisLimiter) Rate(ip string, token string) (bool, error) {
 	if token != "" {
 		key = "ratelimit:token:" + token
 		val, err := r.client.Get(r.ctx, "ratelimit:tokenlimit:"+token).Result()
-		if err == nil {
+		if err != nil {
+			fmt.Printf("[RedisLimiter] Token %s sem limite específico. Usando default: %d", token, r.cfg.DefaultTokenLimit)
+			limit = r.cfg.DefaultTokenLimit
+		} else {
 			if l, err := strconv.Atoi(val); err == nil {
 				limit = l
+				fmt.Printf("[RedisLimiter] Token %s com limite definido via Redis: %d", token, limit)
+			} else {
+				fmt.Printf("[RedisLimiter] Valor inválido no Redis para token %s: %s", token, val)
+				limit = r.cfg.DefaultTokenLimit
 			}
-		}
-		if limit == 0 {
-			limit = r.cfg.DefaultTokenLimit
 		}
 	} else {
 		key = "ratelimit:ip:" + ip
@@ -58,6 +63,8 @@ func (r *RedisLimiter) Rate(ip string, token string) (bool, error) {
 	if count == 1 {
 		r.client.Expire(r.ctx, key, time.Duration(r.cfg.RateLimitDuration)*time.Second)
 	}
+
+	fmt.Printf("[RedisLimiter] Key: %s | Count: %d | Limit: %d", key, count, limit)
 
 	if int(count) > limit {
 		r.client.Expire(r.ctx, key, time.Duration(r.cfg.BlockDuration)*time.Second)

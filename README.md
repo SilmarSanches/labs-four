@@ -45,4 +45,4 @@ for i in {1..7}; do curl -i http://localhost:8080/hello; echo; done
 for i in {1..20}; do curl -i -H "API_KEY: meu-token" http://localhost:8080/hello; echo; done
 ```
 
-Tanto usando ***memory*** que é menos escalavel e não funcionará com vários pods por aplicação, quanto usando o ***redis*** que se torna escalável em vários pods, o comportamento é o mesmo.
+Tanto usando ***memory*** quanto o ***redis*** o comportamento é o mesmo.
